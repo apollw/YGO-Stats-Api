@@ -1,0 +1,6 @@
+@YGO_Duel_Stats_Api_HostAddress = http://localhost:5230
+
+GET {{YGO_Duel_Stats_Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
