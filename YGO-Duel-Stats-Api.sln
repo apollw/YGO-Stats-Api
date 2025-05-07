@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YGO-Duel-Stats-Api", "YGO-Duel-Stats-Api\YGO-Duel-Stats-Api.csproj", "{305CD126-3587-4F97-AD74-AAE8A8F891EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YGO_Duel_Stats_Api", "YGO-Duel-Stats-Api\YGO_Duel_Stats_Api.csproj", "{305CD126-3587-4F97-AD74-AAE8A8F891EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

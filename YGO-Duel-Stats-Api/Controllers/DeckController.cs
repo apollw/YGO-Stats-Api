@@ -1,53 +1,55 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using YGO_Duel_Stats_Api.Data;
+using YGO_Duel_Stats_Api.Interfaces;
 using YGO_Duel_Stats_Api.Models;
 
 namespace YGO_Duel_Stats_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeckController : ControllerBase
+    public class DecksController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IDeckRepository _repo;
+        public DecksController(IDeckRepository repo) => _repo = repo;
 
-        public DeckController(AppDbContext context)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Deck>>> GetAll()
         {
-            _context = context;
+            var list = await _repo.GetAllAsync();
+            return Ok(list);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Deck>> GetById(Guid id)
+        {
+            var deck = await _repo.GetByIdAsync(id);
+            return deck is null ? NotFound() : Ok(deck);
         }
 
         [HttpPost]
         public async Task<ActionResult<Deck>> Create(Deck deck)
         {
-            _context.Decks.Add(deck);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAll), new { id = deck.Id }, deck);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deck>>> GetAll()
-        {
-            return await _context.Decks.ToListAsync();
+            var created = await _repo.CreateAsync(deck);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, Deck deck)
+        public async Task<ActionResult<Deck>> Update(Guid id, Deck deck)
         {
-            if (id != deck.Id) return BadRequest();
-            _context.Entry(deck).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            if (deck.Id != id) return BadRequest();
+            var existing = await _repo.GetByIdAsync(id);
+            if (existing is null) return NotFound();
+            var updated = await _repo.UpdateAsync(deck);
+            return Ok(updated);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var item = await _context.Decks.FindAsync(id);
-            if (item == null) return NotFound();
-            _context.Decks.Remove(item);
-            await _context.SaveChangesAsync();
+            var existing = await _repo.GetByIdAsync(id);
+            if (existing is null) return NotFound();
+            await _repo.DeleteAsync(id);
             return NoContent();
         }
     }

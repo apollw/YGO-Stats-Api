@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using YGO_Duel_Stats_Api.Interfaces;
 using YGO_Duel_Stats_Api.Models;
-using Microsoft.EntityFrameworkCore;
-using YGO_Duel_Stats_Api.Data;
+
 
 namespace YGO_Duel_Stats_Api.Controllers
 {
@@ -11,58 +11,65 @@ namespace YGO_Duel_Stats_Api.Controllers
     [ApiController]
     public class DuelController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IDuelRepository _repo;
+        public DuelController(IDuelRepository repo) => _repo = repo;
 
-        public DuelController(AppDbContext context)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Duel>>> GetAll()
         {
-            _context = context;
+            var all = await _repo.GetAllAsync();
+            return Ok(all);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Duel>> Create(Duel duel)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Duel>> GetById(Guid id)
         {
-            _context.Duels.Add(duel);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetByDuelist), new { duelistId = duel.PlayerAId }, duel);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, Duel duel)
-        {
-            if (id != duel.Id) return BadRequest();
-            _context.Entry(duel).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var item = await _context.Duels.FindAsync(id);
-            if (item == null) return NotFound();
-            _context.Duels.Remove(item);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            var duel = await _repo.GetByIdAsync(id);
+            return duel is null ? NotFound() : Ok(duel);
         }
 
         [HttpGet("byDuelist/{duelistId}")]
         public async Task<ActionResult<IEnumerable<Duel>>> GetByDuelist(Guid duelistId)
         {
-            var list = await _context.Duels
-                .Where(d => d.PlayerAId == duelistId || d.PlayerBId == duelistId)
-                .ToListAsync();
-            return list;
+            var all = await _repo.GetAllAsync();
+            var filtered = all.Where(d => d.PlayerAId == duelistId || d.PlayerBId == duelistId);
+            return Ok(filtered);
         }
 
         [HttpGet("byDate/{day}/{month}/{year}")]
         public async Task<ActionResult<IEnumerable<Duel>>> GetByDate(int day, int month, int year)
         {
-            var list = await _context.Duels
-                .Where(d => d.DuelDate.Day == day &&
-                            d.DuelDate.Month == month &&
-                            d.DuelDate.Year == year)
-                .ToListAsync();
-            return list;
+            var all = await _repo.GetAllAsync();
+            var filtered = all.Where(d => d.DuelDate.Day == day &&
+                                          d.DuelDate.Month == month &&
+                                          d.DuelDate.Year == year);
+            return Ok(filtered);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Duel>> Create(Duel duel)
+        {
+            var created = await _repo.CreateAsync(duel);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Duel>> Update(Guid id, Duel duel)
+        {
+            if (duel.Id != id) return BadRequest();
+            var exists = await _repo.GetByIdAsync(id);
+            if (exists is null) return NotFound();
+            var updated = await _repo.UpdateAsync(duel);
+            return Ok(updated);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var exists = await _repo.GetByIdAsync(id);
+            if (exists is null) return NotFound();
+            await _repo.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

@@ -1,20 +1,30 @@
-﻿namespace YGO_Duel_Stats_Api.Models
-{
-    public class Duel
-    {
-        public Guid Id { get; set; }
-        public Guid PlayerAId { get; set; }
-        public Guid PlayerBId { get; set; }
-        public Guid DeckAId { get; set; }
-        public Guid DeckBId { get; set; }
-        public Guid? WinnerId { get; set; }
-        public DateTime DuelDate { get; set; } = DateTime.UtcNow;
+﻿using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
-        //// Navigation
-        //public Duelist? PlayerA { get; set; }
-        //public Duelist? PlayerB { get; set; }
-        //public Deck? DeckA { get; set; }
-        //public Deck? DeckB { get; set; }
-        //public Duelist? Winner { get; set; }
+namespace YGO_Duel_Stats_Api.Models
+{
+    [Table("duels")]
+    public class Duel : BaseModel
+    {
+        [PrimaryKey("id")]
+        public Guid Id { get; set; }
+
+        [Column("player_a_id")]
+        public Guid PlayerAId { get; set; }
+
+        [Column("player_b_id")]
+        public Guid PlayerBId { get; set; }
+
+        [Column("deck_a_id")]
+        public Guid DeckAId { get; set; }
+
+        [Column("deck_b_id")]
+        public Guid DeckBId { get; set; }
+
+        [Column("winner_id")]
+        public Guid? WinnerId { get; set; }
+
+        [Column("duel_date")]
+        public DateTime DuelDate { get; set; }
     }
 }
