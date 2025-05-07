@@ -1,25 +1,16 @@
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.Extensions.DependencyInjection;
-using Supabase;
-using Supabase.Gotrue;
-using Supabase.Interfaces;
-using Supabase.Realtime;
-using Supabase.Storage;
-using System;
 using YGO_Duel_Stats_Api.Interfaces;
 using YGO_Duel_Stats_Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 1. Carrega as variáveis de ambiente (ou user‐secrets)
-var supabaseUrl = builder.Configuration["SUPABASE_URL"]!;
-var supabaseKey = builder.Configuration["SUPABASE_KEY"]!;
+// Reading Environment Variable
+var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
+var supabaseKey = Environment.GetEnvironmentVariable("SUPABASE_KEY");
 
 // 2. Inicializa o client Supabase
 var options = new Supabase.SupabaseOptions
