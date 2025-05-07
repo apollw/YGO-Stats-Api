@@ -1,14 +1,15 @@
-﻿namespace YGO_Duel_Stats_Api.Models
+﻿using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+
+namespace YGO_Duel_Stats_Api.Models
 {
-    public class Deck
+    [Table("decks")]
+    public class Deck : BaseModel
     {
+        [PrimaryKey("id")]
         public Guid Id { get; set; }
-        public string? Name { get; set; }
 
-        //// Navigation
-        //public Duelist? Duelist { get; set; }
-        //public ICollection<Duel>? DuelsAsDeckA { get; set; }
-        //public ICollection<Duel>? DuelsAsDeckB { get; set; }
+        [Column("name")]
+        public string Name { get; set; }
     }
-
 }
