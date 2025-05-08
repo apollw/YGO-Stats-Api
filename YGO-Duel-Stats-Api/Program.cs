@@ -8,9 +8,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Reading Environment Variable
-var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
-var supabaseKey = Environment.GetEnvironmentVariable("SUPABASE_KEY");
+// garante que as env vars sejam lidas pelo Configuration
+builder.Configuration.AddEnvironmentVariables();
+
+var supabaseUrl = builder.Configuration["SUPABASE_URL"]
+    ?? throw new InvalidOperationException("SUPABASE_URL is missing");
+var supabaseKey = builder.Configuration["SUPABASE_KEY"]
+    ?? throw new InvalidOperationException("SUPABASE_KEY is missing");
+
+Console.WriteLine($"Key (length {supabaseUrl?.Length}): [{supabaseUrl}]");
+Console.WriteLine($"Key (length {supabaseKey?.Length}): [{supabaseKey}]");
 
 // 2. Inicializa o client Supabase
 var options = new Supabase.SupabaseOptions
