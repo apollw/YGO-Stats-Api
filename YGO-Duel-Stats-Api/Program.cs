@@ -1,5 +1,7 @@
 using YGO_Duel_Stats_Api.Interfaces;
 using YGO_Duel_Stats_Api.Repositories;
+using YGO_Duel_Stats_Api.Services.Implementations;
+using YGO_Duel_Stats_Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,9 @@ builder.Services.AddSingleton(supabase);
 builder.Services.AddSingleton<IDuelistRepository, DuelistRepository>();
 builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
 builder.Services.AddSingleton<IDuelRepository, DuelRepository>();
+
+//Scoped Services
+builder.Services.AddScoped<IDeckService, DeckService>();
 
 var app = builder.Build();
 
