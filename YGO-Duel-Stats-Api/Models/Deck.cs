@@ -11,5 +11,8 @@ namespace YGO_Duel_Stats_Api.Models
 
         [Column("name")]
         public string Name { get; set; }
+
+        [Column("registration_date")]
+        public DateTime RegistrationDate { get; set; }
     }
 }
