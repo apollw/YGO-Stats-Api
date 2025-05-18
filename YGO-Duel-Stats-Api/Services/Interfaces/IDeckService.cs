@@ -1,7 +1,7 @@
-﻿using YGO_Duel_Stats_Api.Models.Dtos;
-using YGO_Duel_Stats_Api.Models;
+﻿using YGO_Duel_Stats_Api.Models;
+using YGO_Duel_Stats_Api.Models.Dtos.Simple;
 
-namespace YGO_Duel_Stats_Api.Services
+namespace YGO_Duel_Stats_Api.Services.Interfaces
 {
     public interface IDeckService
     {

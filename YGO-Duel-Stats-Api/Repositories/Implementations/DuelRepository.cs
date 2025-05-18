@@ -1,7 +1,7 @@
-﻿using YGO_Duel_Stats_Api.Interfaces;
-using YGO_Duel_Stats_Api.Models;
+﻿using YGO_Duel_Stats_Api.Models;
+using YGO_Duel_Stats_Api.Repositories.Interfaces;
 
-namespace YGO_Duel_Stats_Api.Repositories
+namespace YGO_Duel_Stats_Api.Repositories.Implementations
 {
     public class DuelRepository : IDuelRepository
     {

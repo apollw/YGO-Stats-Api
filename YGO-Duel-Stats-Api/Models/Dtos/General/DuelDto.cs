@@ -1,4 +1,4 @@
-﻿namespace YGO_Duel_Stats_Api.Models.Dtos
+﻿namespace YGO_Duel_Stats_Api.Models.Dtos.General
 {
     public record DuelDto(
         Guid Id,

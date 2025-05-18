@@ -1,6 +1,6 @@
 ﻿using YGO_Duel_Stats_Api.Models;
 
-namespace YGO_Duel_Stats_Api.Interfaces
+namespace YGO_Duel_Stats_Api.Repositories.Interfaces
 {
     public interface IDeckRepository
     {

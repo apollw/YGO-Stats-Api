@@ -1,6 +1,7 @@
-﻿using YGO_Duel_Stats_Api.Interfaces;
-using YGO_Duel_Stats_Api.Models.Dtos;
-using YGO_Duel_Stats_Api.Models;
+﻿using YGO_Duel_Stats_Api.Models;
+using YGO_Duel_Stats_Api.Models.Dtos.Simple;
+using YGO_Duel_Stats_Api.Repositories.Interfaces;
+using YGO_Duel_Stats_Api.Services.Interfaces;
 
 namespace YGO_Duel_Stats_Api.Services.Implementations
 {

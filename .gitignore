@@ -1,14 +1,103 @@
-# Ignora a pasta .vs (gerada pelo Visual Studio)
-.vs/
+# Visual Studio
 
-# Ignora pastas e arquivos gerados a partir da compilação
+.vs/
+\*.user
+\*.suo
+\*.cache
+\*.ilk
+\*.log
+\*.obj
+\*.pch
+\*.pdb
+\*.idb
+\*.class
+\*.dll
+\*.exe
+\*.ncb
+\*.sdf
+\*.opensdf
+\*.unsuccessfulbuild
+\*.VC.opendb
+.nuget/
+
+# Rider
+
+.idea/
+
+# Build results
+
 bin/
 obj/
+publish/
 
-# Ignora dependências geradas pela IDE
-*.user
-*.suo
+# Publish profiles
 
-# Ignora arquivos de log e arquivos temporários
-*.log
-*.tmp
+Properties/PublishProfiles/
+*.pubxml*
+
+# User Secrets
+
+secrets.json
+
+# Azure Web Deploy
+
+\*.azurePubxml
+
+# Resharper
+
+\_ReSharper\*/
+\*.DotSettings.user
+
+# NuGet
+
+\*.nupkg
+
+# Logs
+
+\*.log
+
+# Visual Studio Code
+
+.vscode/
+
+# Mac
+
+.DS\_Store
+
+# Windows
+
+Thumbs.db
+
+# Node artifacts
+
+node\_modules/
+
+# NPM
+
+package-lock.json
+
+# Yarn
+
+yarn.lock
+
+# Test result output
+
+TestResults/
+
+# coverage
+
+coverage/
+
+# Docker
+
+docker-compose.override.yml
+.env
+
+# Ignore generated files
+
+appsettings.\*.json
+
+# Local database files
+
+\*.mdf
+\*.ldf

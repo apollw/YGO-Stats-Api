@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YGO_Duel_Stats_Api.Models.Dtos;
-using YGO_Duel_Stats_Api.Services;
+using YGO_Duel_Stats_Api.Models.Dtos.General;
+using YGO_Duel_Stats_Api.Models.Dtos.Simple;
+using YGO_Duel_Stats_Api.Services.Interfaces;
 
 namespace YGO_Duel_Stats_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DecksController : ControllerBase
+    public class DeckController : ControllerBase
     {
         private readonly IDeckService _deckService;
-        public DecksController(IDeckService deckService) => _deckService = deckService;
+        public DeckController(IDeckService deckService) => _deckService = deckService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DeckDto>>> GetAll()

@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using YGO_Duel_Stats_Api.Interfaces;
-using YGO_Duel_Stats_Api.Models;
-using YGO_Duel_Stats_Api.Models.Dtos;
+﻿using Microsoft.AspNetCore.Mvc;
+using YGO_Duel_Stats_Api.Models.Dtos.General;
+using YGO_Duel_Stats_Api.Models.Dtos.Simple;
+using YGO_Duel_Stats_Api.Services.Interfaces;
 
 namespace YGO_Duel_Stats_Api.Controllers
 {
@@ -10,13 +9,13 @@ namespace YGO_Duel_Stats_Api.Controllers
     [ApiController]
     public class DuelistsController : ControllerBase
     {
-        private readonly IDuelistRepository _repo;
-        public DuelistsController(IDuelistRepository repo) => _repo = repo;
+        private readonly IDuelistService _duelistService;
+        public DuelistsController(IDuelistService service) => _duelistService = service;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DuelistDto>>> GetAll()
         {
-            var list = await _repo.GetAllAsync();
+            var list = await _duelistService.GetAllAsync();
             var dtos = list.Select(d => new DuelistDto(d.Id, d.Name, d.AvatarUrl));
             return Ok(dtos);
         }
@@ -24,7 +23,7 @@ namespace YGO_Duel_Stats_Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DuelistDto>> GetById(Guid id)
         {
-            var d = await _repo.GetByIdAsync(id);
+            var d = await _duelistService.GetByIdAsync(id);
             if (d is null) return NotFound();
             return Ok(new DuelistDto(d.Id, d.Name, d.AvatarUrl));
         }
@@ -32,30 +31,56 @@ namespace YGO_Duel_Stats_Api.Controllers
         [HttpPost]
         public async Task<ActionResult<DuelistDto>> Create(CreateDuelistDto input)
         {
-            var model = new Duelist { Name = input.Name, AvatarUrl = input.AvatarUrl };
-            var created = await _repo.CreateAsync(model);
-            var dto = new DuelistDto(created.Id, created.Name, created.AvatarUrl);
-            return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
+            try
+            {
+                var created = await _duelistService.CreateAsync(input);
+                var dto = new DuelistDto(created.Id, created.Name, created.AvatarUrl);
+                return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<DuelistDto>> Update(Guid id, CreateDuelistDto input)
+        public async Task<ActionResult<DuelistDto>> Update(Guid id, UpdateDuelistDto input)
         {
-            var existing = await _repo.GetByIdAsync(id);
-            if (existing is null) return NotFound();
-            existing.Name = input.Name;
-            existing.AvatarUrl = input.AvatarUrl;
-            var updated = await _repo.UpdateAsync(existing);
-            return Ok(new DuelistDto(updated.Id, updated.Name, updated.AvatarUrl));
+            try
+            {
+                var updated = await _duelistService.UpdateAsync(id, input);
+                return Ok(new DuelistDto(updated.Id, updated.Name, updated.AvatarUrl));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var existing = await _repo.GetByIdAsync(id);
-            if (existing is null) return NotFound();
-            await _repo.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                await _duelistService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

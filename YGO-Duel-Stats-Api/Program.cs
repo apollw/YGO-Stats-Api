@@ -1,7 +1,7 @@
-using YGO_Duel_Stats_Api.Interfaces;
-using YGO_Duel_Stats_Api.Repositories;
+using YGO_Duel_Stats_Api.Repositories.Implementations;
+using YGO_Duel_Stats_Api.Repositories.Interfaces;
 using YGO_Duel_Stats_Api.Services.Implementations;
-using YGO_Duel_Stats_Api.Services;
+using YGO_Duel_Stats_Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +39,8 @@ builder.Services.AddSingleton<IDuelRepository, DuelRepository>();
 
 //Scoped Services
 builder.Services.AddScoped<IDeckService, DeckService>();
+builder.Services.AddScoped<IDuelService, DuelService>();
+builder.Services.AddScoped<IDuelistService, DuelistService>();
 
 var app = builder.Build();
 
@@ -48,6 +50,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//app.UseSwagger();
+//app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
